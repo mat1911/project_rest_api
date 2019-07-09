@@ -3,9 +3,7 @@ package service;
 import exceptions.AppException;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserDataService {
 
@@ -62,6 +60,21 @@ public class UserDataService {
             throw new AppException("STRING IS NOT CORRECT: " + text);
         }
         else if(!upperCase && !text.matches("[a-z]+")){
+            throw new AppException("STRING IS NOT CORRECT: " + text);
+        }
+
+        return text;
+    }
+
+    public String getString(String message, boolean upperCase){
+        System.out.println(message);
+
+        String text = scanner.nextLine();
+
+        if(upperCase && !text.matches("([A-Z]+ *)+")){
+            throw new AppException("STRING IS NOT CORRECT: " + text);
+        }
+        else if(!upperCase && !text.matches("([a-z]+ *)+")){
             throw new AppException("STRING IS NOT CORRECT: " + text);
         }
 

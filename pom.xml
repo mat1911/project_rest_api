@@ -95,6 +95,7 @@
             <target>12</target>
           </configuration>
         </plugin>
+
       </plugins>
     </pluginManagement>
   </build>

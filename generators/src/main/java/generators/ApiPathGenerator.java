@@ -6,9 +6,16 @@ public class ApiPathGenerator {
 
     public static String getPathToTranslator(String sourceLanguageCode, String targetLanguageCode, String word){
         translatorPath = new StringBuilder("https://systran-systran-platform-for-language-processing-v1.p.rapidapi.com/translation/text/translate?source=");
-        translatorPath.append("" + sourceLanguageCode + "&target=");
-        translatorPath.append("" + targetLanguageCode + "&input=");
-        translatorPath.append(word );
+        translatorPath.append(sourceLanguageCode + "&target=");
+        translatorPath.append(targetLanguageCode + "&input=" + word);
+
+        return translatorPath.toString();
+    }
+
+    public static String getPathToCountry(String code){
+
+        translatorPath = new StringBuilder("https://restcountries-v1.p.rapidapi.com/callingcode/");
+        translatorPath.append(code);
 
         return translatorPath.toString();
     }

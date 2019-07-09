@@ -1,4 +1,4 @@
-package service;
+package service.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,18 +9,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-
-
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-public class HTTPService {
+public abstract class AbstractHttpService<T> implements HttpService<T>{
 
-    public static HttpResponse get(String apiPath){
-
+    @Override
+    public HttpResponse get(String apiPath) {
         HttpResponse<String> response;
         try {
-           response = HttpClient
+            response = HttpClient
                     .newBuilder()
                     .proxy(ProxySelector.getDefault())
                     .build()
@@ -33,25 +31,8 @@ public class HTTPService {
         return response;
     }
 
-    private static HttpRequest requestGet(final String path){
-
-        try {
-            return HttpRequest.newBuilder()
-                    .uri(new URI(path))
-                    .version(HttpClient.Version.HTTP_2)
-                    .timeout(Duration.ofSeconds(10)) // HttpTimeoutException
-                    .header("X-RapidAPI-Host", "systran-systran-platform-for-language-processing-v1.p.rapidapi.com")
-                    .header("X-RapidAPI-Key", "a3d4c933e1msh826472f9da0e554p1bfe5ajsn2c43227496ea")
-                    .GET()
-                    .build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            throw new AppException("WRONG PATH IN URI");
-        }
-    }
-
-    private static <T> HttpRequest requestPost(final String path, T body){
-
+    @Override
+    public HttpRequest requestPost(String path, T body) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(body);
 
@@ -68,6 +49,4 @@ public class HTTPService {
             throw new AppException("WRONG PATH IN URI");
         }
     }
-
-
 }

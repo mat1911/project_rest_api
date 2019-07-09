@@ -2,7 +2,7 @@ package model.systranapi;
 
 import java.util.List;
 
-public class Example {
+public class Words {
     private List<Output> outputs = null;
 
     public List<Output> getOutputs() {

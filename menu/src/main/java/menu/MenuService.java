@@ -2,6 +2,7 @@ package menu;
 
 import exceptions.AppException;
 import generators.TranslationsGenerator;
+import service.FileDataService;
 import service.UserDataService;
 import service.WordsTranslationService;
 
@@ -9,11 +10,16 @@ import java.util.Map;
 
 public class MenuService {
 
+    private String WRONG_ANSWERS_FILE = "resources/wrong_answers.txt";
     private String FILE_WITH_WORDS = "resources/englishWords.txt";
-    private int NUMER_OF_WORDS = 4;
+    private int NUMER_OF_WORDS = 1;
     private UserDataService userDataService = new UserDataService();
 
     public void mainMenu(){
+
+        FileDataService fileDataService = new FileDataService();
+        fileDataService.createFile("translatedWords.txt");
+
         while (true) {
             try {
 
@@ -48,33 +54,13 @@ public class MenuService {
         TranslationsGenerator translationsGenerator = new TranslationsGenerator();
         Map<String, String > words = translationsGenerator.generateEnglishWords(FILE_WITH_WORDS, NUMER_OF_WORDS);
         WordsTranslationService wordsTranslationService = new WordsTranslationService(words);
+        FileDataService fileDataService = new FileDataService();
 
         wordsTranslationService.takeUserAnswers();
-        showWrongAnswers(wordsTranslationService);
-        showCorrectAnswers(wordsTranslationService);
+        wordsTranslationService.showWrongAnswers();
+        wordsTranslationService.showCorrectAnswers();
+
+        fileDataService.saveDataToFile(WRONG_ANSWERS_FILE, wordsTranslationService.getWrongAnswers(), true);
     }
 
-    private void showWrongAnswers(WordsTranslationService wordsTranslationService){
-
-        if(wordsTranslationService.getWrongAnswers().isEmpty()){
-            return;
-        }
-
-        System.out.println("==========================================================================");
-        System.out.println("==============================WRONG ANSWERS===============================");
-        System.out.println("==========================================================================");
-        wordsTranslationService.getWrongAnswers().forEach((en, pl) -> System.out.println(en + " " + pl));
-    }
-
-    private void showCorrectAnswers(WordsTranslationService wordsTranslationService){
-
-        if(wordsTranslationService.getCorrectAnswers().isEmpty()){
-            return;
-        }
-
-        System.out.println("==========================================================================");
-        System.out.println("==============================CORRECT ANSWERS=============================");
-        System.out.println("==========================================================================");
-        wordsTranslationService.getCorrectAnswers().forEach((en, pl) -> System.out.println(en + " " + pl));
-    }
 }

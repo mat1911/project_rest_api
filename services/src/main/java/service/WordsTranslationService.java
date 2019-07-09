@@ -14,21 +14,12 @@ public class WordsTranslationService {
         this.words = words;
         this.correctAnswers = new HashMap<>();
         this.wrongAnswers = new HashMap<>();
+        this.userDataService = new UserDataService();
     }
 
     public void takeUserAnswers(){
-        userDataService = new UserDataService();
-
         System.out.println("Translate words from polish language to english");
-        words.forEach((enWord, plWord) -> {
-            String answear = userDataService.getStringOfLetters(plWord + " -> ", false);
-            if(answear.equals(enWord)){
-                correctAnswers.put(enWord, plWord);
-            }
-            else {
-                wrongAnswers.put(enWord, plWord);
-            }
-        });
+        words.forEach(this::takeAndCheckAnswer);
     }
 
     public Map<String, String> getCorrectAnswers() {
@@ -45,6 +36,46 @@ public class WordsTranslationService {
 
     public void setWrongAnswers(Map<String, String> wrongAnswers) {
         this.wrongAnswers = wrongAnswers;
+    }
+
+    public void showWrongAnswers(){
+
+        showAnswers(wrongAnswers, "==============================WRONG ANSWERS===============================");
+    }
+
+    public void showCorrectAnswers(){
+
+        showAnswers(correctAnswers, "==============================CORRECT ANSWERS=============================");
+    }
+
+    private void takeAndCheckAnswer(String enWord, String plWord){
+        String answer;
+
+        showHint(enWord);
+        answer = userDataService.getString(plWord + " -> ", false);
+
+        if(answer.equals(enWord)){
+            correctAnswers.put(enWord, plWord);
+        }
+        else {
+            wrongAnswers.put(enWord, plWord);
+        }
+    }
+
+    private void showHint(String word){
+        System.out.println("First letter: " + word.charAt(0));
+        System.out.println("Number of letters: " + word.length());
+    }
+
+    private void showAnswers(Map<String, String> correctAnswers, String s) {
+        if(correctAnswers.isEmpty()){
+            return;
+        }
+
+        System.out.println("==========================================================================");
+        System.out.println(s);
+        System.out.println("==========================================================================");
+        correctAnswers.forEach((en, pl) -> System.out.println("-" + en + " " + pl));
     }
 
 }
