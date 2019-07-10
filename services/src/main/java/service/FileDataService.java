@@ -7,13 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 public class FileDataService {
 
     public static final int ALL_LINES = 0;
-    private int NUMBER_OF_WORDS = 3000; // in file englishWords.txt
 
     public void createFile(String fileName){
 
@@ -54,7 +54,7 @@ public class FileDataService {
         try (
                 Stream<String> lines = Files.lines(Path.of(fileName))
         ) {
-            dataFromFile = readFromFile(lines, numberOfLines);
+            dataFromFile = readFromFile(lines.collect(Collectors.toList()), numberOfLines);
         } catch (IOException e) {
             e.printStackTrace();
             throw new AppException("Problem with reading from file: " + fileName);
@@ -63,10 +63,10 @@ public class FileDataService {
         return dataFromFile;
     }
 
-    private List<String> readFromFile(Stream<String> lines, int numberOfLines) {
+    private List<String> readFromFile(List<String> lines, int numberOfLines) {
 
         List<String> dataFromFile = new ArrayList<>(numberOfLines);
-        List<Integer> indexesOfWords = getWordsIndexes(numberOfLines);
+        List<Integer> indexesOfWords = getRandomIndexes(numberOfLines, lines.size());
         AtomicInteger counter = new AtomicInteger();
 
         lines.forEach(line -> {
@@ -83,14 +83,14 @@ public class FileDataService {
 
     }
 
-    private List<Integer> getWordsIndexes(int numberOfWords){
+    private List<Integer> getRandomIndexes(int numberOfWords, int numberOfElementsInFile){
 
         List<Integer> indexes = new ArrayList<>();
         Random random = new Random();
         int result, i = 0;
 
         while(i < numberOfWords){
-            result = random.nextInt(NUMBER_OF_WORDS);
+            result = random.nextInt(numberOfElementsInFile);
             if(!indexes.contains(result)){
                 indexes.add(result);
                 i++;

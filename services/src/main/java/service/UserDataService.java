@@ -66,15 +66,12 @@ public class UserDataService {
         return text;
     }
 
-    public String getString(String message, boolean upperCase){
+    public String getString(String message){
         System.out.println(message);
 
         String text = scanner.nextLine();
 
-        if(upperCase && !text.matches("([A-Z]+ *)+")){
-            throw new AppException("STRING IS NOT CORRECT: " + text);
-        }
-        else if(!upperCase && !text.matches("([a-z]+ *)+")){
+        if(!text.matches("([A-Za-z]+ *)+") ){
             throw new AppException("STRING IS NOT CORRECT: " + text);
         }
 

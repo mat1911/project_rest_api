@@ -1,4 +1,6 @@
-package service;
+package service.api;
+
+import service.UserDataService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,21 +24,11 @@ public class WordsTranslationService {
         words.forEach(this::takeAndCheckAnswer);
     }
 
-    public Map<String, String> getCorrectAnswers() {
-        return correctAnswers;
-    }
-
-    public void setCorrectAnswers(Map<String, String> correctAnswers) {
-        this.correctAnswers = correctAnswers;
-    }
 
     public Map<String, String> getWrongAnswers() {
         return wrongAnswers;
     }
 
-    public void setWrongAnswers(Map<String, String> wrongAnswers) {
-        this.wrongAnswers = wrongAnswers;
-    }
 
     public void showWrongAnswers(){
 
@@ -52,7 +44,7 @@ public class WordsTranslationService {
         String answer;
 
         showHint(enWord);
-        answer = userDataService.getString(plWord + " -> ", false);
+        answer = userDataService.getString(plWord + " -> ");
 
         if(answer.equals(enWord)){
             correctAnswers.put(enWord, plWord);
@@ -67,15 +59,15 @@ public class WordsTranslationService {
         System.out.println("Number of letters: " + word.length());
     }
 
-    private void showAnswers(Map<String, String> correctAnswers, String s) {
-        if(correctAnswers.isEmpty()){
+    private void showAnswers(Map<String, String> answers, String s) {
+        if(answers.isEmpty()){
             return;
         }
 
         System.out.println("==========================================================================");
         System.out.println(s);
         System.out.println("==========================================================================");
-        correctAnswers.forEach((en, pl) -> System.out.println("-" + en + " " + pl));
+        answers.forEach((en, pl) -> System.out.println("-" + en + " " + pl));
     }
 
 }

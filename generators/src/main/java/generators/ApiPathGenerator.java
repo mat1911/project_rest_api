@@ -14,7 +14,7 @@ public class ApiPathGenerator {
 
     public static String getPathToCountry(String code){
 
-        translatorPath = new StringBuilder("https://restcountries-v1.p.rapidapi.com/callingcode/");
+        translatorPath = new StringBuilder("https://restcountries-v1.p.rapidapi.com/alpha/");
         translatorPath.append(code);
 
         return translatorPath.toString();

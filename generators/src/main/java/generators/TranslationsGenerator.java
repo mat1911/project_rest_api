@@ -52,7 +52,7 @@ public class TranslationsGenerator {
     public Map<String, String> getTranslatedWord(List<String> wordsToTranslate){
 
         FileDataService fileDataService = new FileDataService();
-        List<String> translatedWordsFromFile = fileDataService.getDataFromFile("translatedWords.txt", FileDataService.ALL_LINES);
+        List<String> translatedWordsFromFile = fileDataService.getDataFromFile("resources/translatedWords.txt", FileDataService.ALL_LINES);
         Map<String, String> translatedWordsAsMap = new HashMap<>();
         Map<String, String> translations = new HashMap<>();
 
@@ -70,7 +70,7 @@ public class TranslationsGenerator {
             }
         });
 
-        fileDataService.saveDataToFile("translatedWords.txt", translatedWordsFromFile, false);
+        fileDataService.saveDataToFile("resources/translatedWords.txt", translatedWordsFromFile, false);
 
         return translations;
 
