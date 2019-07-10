@@ -2,6 +2,7 @@ package menu;
 
 import exceptions.AppException;
 import generators.CountriesGenerator;
+import generators.NumbersCuriosityGenerator;
 import generators.TranslationsGenerator;
 import model.countriesapi.Country;
 import service.FileDataService;
@@ -39,7 +40,9 @@ public class MenuService {
 
                     case 2 -> option2();
 
-                    case 3 ->{
+                    case 3 -> option3();
+
+                    case 4 ->{
                         System.out.println("Have a nice day!");
                         return;
                     }
@@ -57,7 +60,8 @@ public class MenuService {
         System.out.println("=================MENU=================");
         System.out.println("1 - Translate english words");
         System.out.println("2 - Country quiz");
-        System.out.println("3 - end of app");
+        System.out.println("3 - Get curiosity about today date");
+        System.out.println("4 - end of app");
     }
 
     private void option1(){
@@ -83,6 +87,14 @@ public class MenuService {
         countryQuizService.takeUserAnswers();
         countryQuizService.showCorrectAnswers();
         countryQuizService.showWrongAnswers();
+    }
+
+    private void option3(){
+
+        NumbersCuriosityGenerator numbersCuriosityGenerator = new NumbersCuriosityGenerator();
+        String curiosity = numbersCuriosityGenerator.generateCuriosityAboutNumbers();
+
+        System.out.println(curiosity);
     }
 
 }

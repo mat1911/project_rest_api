@@ -19,4 +19,12 @@ public class ApiPathGenerator {
 
         return translatorPath.toString();
     }
+
+    public static String getPathToNumbers(int month, int day){
+
+        translatorPath = new StringBuilder("https://numbersapi.p.rapidapi.com/");
+        translatorPath.append(month + "/" + day + "/date?fragment=true&json=true");
+
+        return translatorPath.toString();
+    }
 }

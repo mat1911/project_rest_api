@@ -24,8 +24,6 @@ bz
 bj
 bm
 bt
-p
-s
 ba
 bw
 bv
@@ -49,7 +47,6 @@ cc
 co
 km
 cg
-t
 ck
 cr
 ci
@@ -102,7 +99,6 @@ hu
 is
 in
 id
-i
 iq
 ie
 im
@@ -115,8 +111,6 @@ jo
 kz
 ke
 ki
-d
-r
 kw
 kg
 la
@@ -129,7 +123,6 @@ li
 lt
 lu
 mo
-t
 mg
 mw
 my
@@ -142,8 +135,6 @@ mr
 mu
 yt
 mx
-f
-r
 mc
 mn
 me
@@ -167,7 +158,6 @@ no
 om
 pk
 pw
-s
 pa
 pg
 py
@@ -183,7 +173,6 @@ ro
 ru
 rw
 bl
-a
 kn
 lc
 mf
@@ -215,9 +204,7 @@ sz
 se
 ch
 sy
-p
 tj
-u
 th
 tl
 tg
@@ -238,10 +225,7 @@ um
 uy
 uz
 vu
-b
 vn
-b
-u
 wf
 eh
 ye

@@ -37,7 +37,7 @@ public class CountriesGenerator {
 
         Country country = gson.fromJson(httpService.get(apiPath).body().toString(), Country.class);
 
-        if(country == null){
+        if(country == null || country.getName() == null){
             throw new AppException("Problem with connecting with country api - CountriesGenerator - getCountryData");
         }
 

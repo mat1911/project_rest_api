@@ -12,4 +12,19 @@ public class Words {
     public void setOutputs(List<Output> outputs) {
         this.outputs = outputs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Words words = (Words) o;
+
+        return outputs != null ? outputs.equals(words.outputs) : words.outputs == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return outputs != null ? outputs.hashCode() : 0;
+    }
 }
