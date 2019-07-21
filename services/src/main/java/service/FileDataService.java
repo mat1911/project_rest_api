@@ -10,22 +10,30 @@ import model.systranapi.json.InputWords;
 import model.systranapi.json.TranslatedWords;
 
 import java.io.*;
+import java.util.*;
 
 public class FileDataService {
 
-    public static final int ALL_LINES = 0;
+    public void createJsonFiles(String... fileNames){
 
-    public void createFile(String fileName){
+        for(String fileName : fileNames){
+            File file = new File(fileName);
 
-        File file = new File(fileName);
+            if(!file.exists()){
 
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new AppException("Problem with creating file: " + fileName);
+                try (PrintWriter printWriter = new PrintWriter(file)){
+
+                    file.createNewFile();
+                    printWriter.println("{");
+                    printWriter.println("}");
+
+                } catch (IOException e) {
+                    throw new AppException("Problem with creating file: " + fileName);
+                }
+
             }
         }
+
     }
 
    public CountryCodes getCountryCodesFromJsonFile(String fileName){
@@ -37,6 +45,20 @@ public class FileDataService {
                .orElseThrow(() -> new AppException("FileDataService - getCountryCodesFromJsonFile() - problem with reading from file: " + fileName));
    }
 
+    public void saveEnglishWordsToJsonFile(String fileName, InputWords dataToSave, boolean append){
+
+        JsonConverter<InputWords> converter = new InputWordsConverter(fileName);
+
+        if(append){
+
+            Set<String> wordsFromFile = getEnglishWordsToAppend(fileName);
+
+            wordsFromFile.addAll(dataToSave.getWords());
+            dataToSave = new InputWords(wordsFromFile);
+        }
+
+        converter.toJsonFile(dataToSave);
+    }
 
    public InputWords getEnglishWordsFromJsonFile(String fileName){
 
@@ -51,7 +73,7 @@ public class FileDataService {
 
         JsonConverter<TranslatedWords> converter = new TranslatedWordsConverter(fileName);
 
-        TranslatedWords dataToSave = getTranslatedWordsFromJsonFile(fileName);
+        TranslatedWords dataToSave = getTranslatedWordsToAppend(fileName);
 
         dataToSave.getTranslatedWords().putAll(translatedWords.getTranslatedWords());
 
@@ -67,6 +89,24 @@ public class FileDataService {
                 .orElseThrow(() -> new AppException("FileDataService - getTranslatedWordsFromJsonFile() - problem with reading from file: " + fileName));
 
         return dataToSave.getTranslatedWords() != null ? dataToSave : new TranslatedWords();
+    }
+
+    private Set<String> getEnglishWordsToAppend(String fileName){
+
+        InputWords inputWords = getEnglishWordsFromJsonFile(fileName);
+
+        return inputWords.getWords() != null ? new HashSet<>(inputWords.getWords()) : new HashSet<>();
+    }
+
+    private TranslatedWords getTranslatedWordsToAppend(String fileName){
+
+        TranslatedWords translatedWords = getTranslatedWordsFromJsonFile(fileName);
+
+        if(translatedWords != null && translatedWords.getTranslatedWords() != null){
+            return translatedWords;
+        }
+
+        return new TranslatedWords();
     }
 
 }

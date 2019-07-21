@@ -10,6 +10,7 @@ import service.FileDataService;
 import service.http.AbstractHttpService;
 import service.http.HttpSystranService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,29 +18,39 @@ import java.util.Map;
 public class TranslationsGenerator {
 
     private static final String  FILE_WITH_TRANSLATED_WORTDS = "resources/translatedWords.json";
-    private Map<String, String> translatedWords;
+    private List<String> allWordsFromFile;
+
+
+    public TranslationsGenerator() {
+        allWordsFromFile = new ArrayList<>();
+    }
 
     public Map<String, String> generateEnglishWords(String fileName, int numberOfWords) {
 
-        List<String> englishWords = takeWordsFromFile(fileName, numberOfWords);
-        translatedWords = new HashMap<>(numberOfWords);
-
+        List<String> drawWords = getWordsFromFile(fileName, numberOfWords);
         System.out.println("Loading and translating words. Please wait.");
-        return getTranslatedWord(englishWords);
+
+        return getTranslatedWord(drawWords);
 
     }
 
-    private List<String> takeWordsFromFile(String fileName, int numberOfWords) {
+    public List<String> getAllWordsFromFile() {
+        return allWordsFromFile;
+    }
+
+    private List<String> getWordsFromFile(String fileName, int numberOfWords) {
 
         FileDataService fileDataService = new FileDataService();
         InputWords inputWords = fileDataService.getEnglishWordsFromJsonFile(fileName);
         ElementsGenerator<String> generator = new ElementsGenerator<>();
 
+        allWordsFromFile = inputWords.getWords();
+
         return generator.generateSubList(inputWords.getWords(), numberOfWords);
 
     }
 
-    private String getTranslatedWord(String word){
+    private String translateWords(String word){
 
         String apiPath = ApiPathGenerator.getPathToTranslator("en", "pl", word);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -55,7 +66,7 @@ public class TranslationsGenerator {
 
     }
 
-    public Map<String, String> getTranslatedWord(List<String> wordsToTranslate){
+    private Map<String, String> getTranslatedWord(List<String> wordsToTranslate){
 
         FileDataService fileDataService = new FileDataService();
         TranslatedWords translatedWords = fileDataService.getTranslatedWordsFromJsonFile(FILE_WITH_TRANSLATED_WORTDS);
@@ -67,7 +78,7 @@ public class TranslationsGenerator {
             if (translatedWordsAsMap.containsKey(word)) {
                 translations.put(word, translatedWordsAsMap.get(word));
             } else {
-                translations.put(word, getTranslatedWord(word));
+                translations.put(word, translateWords(word));
                 translatedWordsAsMap.put(word, translations.get(word));
             }
 

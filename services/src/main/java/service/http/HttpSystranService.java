@@ -20,7 +20,7 @@ public class HttpSystranService<Words> extends AbstractHttpService<Words>{
                     .version(HttpClient.Version.HTTP_2)
                     .timeout(Duration.ofSeconds(10)) // HttpTimeoutException
                     .header("X-RapidAPI-Host", "systran-systran-platform-for-language-processing-v1.p.rapidapi.com")
-                    .header("X-RapidAPI-Key", "a9cb7a405dmshc6e122920f39038p1e8d07jsn164b58f6afa1")
+                    .header("X-RapidAPI-Key", "<HERE PASTE YOUR KEY FROM RAPIDAPI>")
                     .GET()
                     .build();
         } catch (URISyntaxException e) {

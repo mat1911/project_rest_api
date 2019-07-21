@@ -5,7 +5,7 @@ import service.UserDataService;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WordsTranslationService {
+public class WordsTranslationService{
 
     private UserDataService userDataService;
     private Map<String, String> correctAnswers;
@@ -24,12 +24,6 @@ public class WordsTranslationService {
         words.forEach(this::takeAndCheckAnswer);
     }
 
-
-    public Map<String, String> getWrongAnswers() {
-        return wrongAnswers;
-    }
-
-
     public void showWrongAnswers(){
 
         showAnswers(wrongAnswers, "==============================WRONG ANSWERS===============================");
@@ -38,6 +32,14 @@ public class WordsTranslationService {
     public void showCorrectAnswers(){
 
         showAnswers(correctAnswers, "==============================CORRECT ANSWERS=============================");
+    }
+
+    public Map<String, String> getWrongAnswers() {
+        return wrongAnswers;
+    }
+
+    public Map<String, String> getCorrectAnswers() {
+        return correctAnswers;
     }
 
     private void takeAndCheckAnswer(String enWord, String plWord){

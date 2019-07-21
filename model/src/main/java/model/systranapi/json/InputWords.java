@@ -1,14 +1,14 @@
 package model.systranapi.json;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class InputWords {
 
     private List<String> words;
 
-    public InputWords(List<String> words) {
-        this.words = words;
-    }
+    public InputWords(Collection<String> words){ this.words = new ArrayList<>(words); }
 
     public List<String> getWords() {
         return words;

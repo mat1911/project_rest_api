@@ -33,8 +33,7 @@ public abstract class JsonConverter<T>{
         try (FileReader fileReader = new FileReader(jsonFileName)){
             return Optional.of(gson.fromJson(fileReader, type));
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AppException("JSON CONVERTER - FROM JSON");
+            throw new AppException("JSON CONVERTER - FROM JSON - FILE MAY BE EMPTY");
         }
     }
 }

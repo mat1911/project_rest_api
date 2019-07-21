@@ -14,10 +14,13 @@ public class ElementsGenerator<T> {
 
     public List<T> generateSubList(List<T> inputList, int newSize){
 
+        if(inputList.size() <= newSize){
+            return inputList;
+        }
+
         T drawElement;
         int drawIndex = 0, i = 0;
         List<T> result = new ArrayList<>();
-
 
         while(i < newSize) {
 
