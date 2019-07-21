@@ -5,6 +5,7 @@ import generators.CountriesGenerator;
 import generators.NumbersCuriosityGenerator;
 import generators.TranslationsGenerator;
 import model.countriesapi.Country;
+import model.systranapi.json.TranslatedWords;
 import service.FileDataService;
 import service.UserDataService;
 import service.api.CountryQuizService;
@@ -15,10 +16,10 @@ import java.util.Map;
 
 public class MenuService {
 
-    private String WRONG_ANSWERS_FILE = "resources/wrong_answers.txt";
-    private String FILE_WITH_WORDS = "resources/englishWords.txt";
-    private String FILE_WITH_TRANSLATIONS = "resources/translatedWords.txt";
-    private String FILE_WITH_COUNTRY_CODES = "resources/countryCodes.txt";
+    private String FILE_WITH_WRONG_ANSWERS = "resources/wrong_answers.json";
+    private String FILE_WITH_WORDS = "resources/englishWords.json";
+    private String FILE_WITH_TRANSLATIONS = "resources/translatedWords.json";
+    private String FILE_WITH_COUNTRY_CODES = "resources/countryCodes.json";
     private int NUMER_OF_WORDS = 5;
     private int NUMER_OF_COUNTRIES = 3;
     private UserDataService userDataService = new UserDataService();
@@ -26,7 +27,9 @@ public class MenuService {
     public void mainMenu(){
 
         FileDataService fileDataService = new FileDataService();
+
         fileDataService.createFile(FILE_WITH_TRANSLATIONS);
+        fileDataService.createFile(FILE_WITH_WRONG_ANSWERS);
 
         while (true) {
             try {
@@ -75,7 +78,9 @@ public class MenuService {
         wordsTranslationService.showWrongAnswers();
         wordsTranslationService.showCorrectAnswers();
 
-        fileDataService.saveDataToFile(WRONG_ANSWERS_FILE, wordsTranslationService.getWrongAnswers(), true);
+        TranslatedWords translatedWords = new TranslatedWords(wordsTranslationService.getWrongAnswers());
+
+        fileDataService.saveTranslatedWordsToJsonFile(FILE_WITH_WRONG_ANSWERS, translatedWords);
     }
 
     private void option2(){

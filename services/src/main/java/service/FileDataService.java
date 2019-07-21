@@ -1,15 +1,15 @@
 package service;
 
+import converters.json.CountryCodeConverter;
+import converters.json.InputWordsConverter;
+import converters.json.JsonConverter;
+import converters.json.TranslatedWordsConverter;
 import exceptions.AppException;
+import model.countriesapi.json.CountryCodes;
+import model.systranapi.json.InputWords;
+import model.systranapi.json.TranslatedWords;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 public class FileDataService {
 
@@ -28,79 +28,45 @@ public class FileDataService {
         }
     }
 
-    public void saveDataToFile(String fileName, Map<String,String> dataToSave, boolean append){
+   public CountryCodes getCountryCodesFromJsonFile(String fileName){
 
-        try(PrintWriter printWriter = new PrintWriter(new FileOutputStream(fileName, append))){
-            dataToSave.forEach((enWord, plWord) -> printWriter.append(enWord + " " + plWord + System.lineSeparator()));
-        } catch (FileNotFoundException e) {
-            throw new AppException("Problem with saving data to file " + fileName);
-        }
+       JsonConverter<CountryCodes> converter = new CountryCodeConverter(fileName);
 
+       return converter
+               .fromJsonFile()
+               .orElseThrow(() -> new AppException("FileDataService - getCountryCodesFromJsonFile() - problem with reading from file: " + fileName));
+   }
+
+
+   public InputWords getEnglishWordsFromJsonFile(String fileName){
+
+       JsonConverter<InputWords> converter = new InputWordsConverter(fileName);
+
+       return converter
+               .fromJsonFile()
+               .orElseThrow(() -> new AppException("FileDataService - getEnglishWordsFromJsonFile() - problem with reading from file: " + fileName));
+   }
+
+    public void saveTranslatedWordsToJsonFile(String fileName, TranslatedWords translatedWords){
+
+        JsonConverter<TranslatedWords> converter = new TranslatedWordsConverter(fileName);
+
+        TranslatedWords dataToSave = getTranslatedWordsFromJsonFile(fileName);
+
+        dataToSave.getTranslatedWords().putAll(translatedWords.getTranslatedWords());
+
+        converter.toJsonFile(dataToSave);
     }
 
-    public void saveDataToFile(String fileName, List<String> dataToSave, boolean append){
+    public TranslatedWords getTranslatedWordsFromJsonFile(String fileName){
 
-        try(PrintWriter printWriter = new PrintWriter(new FileOutputStream(fileName, append))){
-            dataToSave.forEach(words -> printWriter.append(words + System.lineSeparator()));
-        } catch (FileNotFoundException e) {
-            throw new AppException("Problem with saving data to file " + fileName);
-        }
+        JsonConverter<TranslatedWords> converter = new TranslatedWordsConverter(fileName);
 
-    }
+        TranslatedWords dataToSave = converter
+                .fromJsonFile()
+                .orElseThrow(() -> new AppException("FileDataService - getTranslatedWordsFromJsonFile() - problem with reading from file: " + fileName));
 
-    public List<String> getDataFromFile(String fileName, int numberOfLines) {
-
-        List<String> dataFromFile = null;
-        try (
-                Stream<String> lines = Files.lines(Path.of(fileName))
-        ) {
-            dataFromFile = readFromFile(lines.collect(Collectors.toList()), numberOfLines);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AppException("Problem with reading from file: " + fileName);
-        }
-
-        return dataFromFile;
-    }
-
-    private List<String> readFromFile(List<String> lines, int numberOfLines) {
-
-        List<String> dataFromFile = new ArrayList<>(numberOfLines);
-        List<Integer> indexesOfWords = getRandomIndexes(numberOfLines, lines.size());
-        AtomicInteger counter = new AtomicInteger();
-
-        lines.forEach(line -> {
-
-            if(numberOfLines == ALL_LINES){
-                dataFromFile.add(line);
-            } else if (indexesOfWords.size() != 0 && counter.getAndIncrement() == indexesOfWords.get(0)){
-                indexesOfWords.remove(0);
-                dataFromFile.add(line);
-            }
-        });
-
-        return dataFromFile;
-
-    }
-
-    private List<Integer> getRandomIndexes(int numberOfWords, int numberOfElementsInFile){
-
-        List<Integer> indexes = new ArrayList<>();
-        Random random = new Random();
-        int result, i = 0;
-
-        while(i < numberOfWords){
-            result = random.nextInt(numberOfElementsInFile);
-            if(!indexes.contains(result)){
-                indexes.add(result);
-                i++;
-            }
-        }
-
-        indexes.sort(Comparator.comparingInt(Integer::intValue));
-
-        return indexes;
-
+        return dataToSave.getTranslatedWords() != null ? dataToSave : new TranslatedWords();
     }
 
 }

@@ -1,8 +1,10 @@
 package generators;
 
+
 import com.google.gson.Gson;
 import exceptions.AppException;
 import model.countriesapi.Country;
+import model.countriesapi.json.CountryCodes;
 import service.FileDataService;
 import service.http.AbstractHttpService;
 import service.http.HttpCountriesService;
@@ -26,7 +28,10 @@ public class CountriesGenerator {
     private List<String> takeCountryCodesFromFile(String fileName, int numberOfCodes) {
 
         FileDataService fileDataService = new FileDataService();
-        return fileDataService.getDataFromFile(fileName, numberOfCodes);
+        CountryCodes countryCodes = fileDataService.getCountryCodesFromJsonFile(fileName);
+        ElementsGenerator<String> generator = new ElementsGenerator<>();
+
+        return generator.generateSubList(countryCodes.getCodes(), numberOfCodes);
     }
 
     private Country getCountryData(String countryCode){

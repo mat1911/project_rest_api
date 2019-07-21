@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import exceptions.AppException;
 import model.systranapi.Words;
+import model.systranapi.json.InputWords;
+import model.systranapi.json.TranslatedWords;
 import service.FileDataService;
 import service.http.AbstractHttpService;
 import service.http.HttpSystranService;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 public class TranslationsGenerator {
 
+    private static final String  FILE_WITH_TRANSLATED_WORTDS = "resources/translatedWords.json";
     private Map<String, String> translatedWords;
 
     public Map<String, String> generateEnglishWords(String fileName, int numberOfWords) {
@@ -29,7 +32,10 @@ public class TranslationsGenerator {
     private List<String> takeWordsFromFile(String fileName, int numberOfWords) {
 
         FileDataService fileDataService = new FileDataService();
-        return fileDataService.getDataFromFile(fileName, numberOfWords);
+        InputWords inputWords = fileDataService.getEnglishWordsFromJsonFile(fileName);
+        ElementsGenerator<String> generator = new ElementsGenerator<>();
+
+        return generator.generateSubList(inputWords.getWords(), numberOfWords);
 
     }
 
@@ -52,25 +58,22 @@ public class TranslationsGenerator {
     public Map<String, String> getTranslatedWord(List<String> wordsToTranslate){
 
         FileDataService fileDataService = new FileDataService();
-        List<String> translatedWordsFromFile = fileDataService.getDataFromFile("resources/translatedWords.txt", FileDataService.ALL_LINES);
-        Map<String, String> translatedWordsAsMap = new HashMap<>();
+        TranslatedWords translatedWords = fileDataService.getTranslatedWordsFromJsonFile(FILE_WITH_TRANSLATED_WORTDS);
+        Map<String, String> translatedWordsAsMap = translatedWords.getTranslatedWords();
         Map<String, String> translations = new HashMap<>();
 
-        translatedWordsFromFile.forEach(words -> {
-            String[] wordAndTranslation = words.split(";");
-            translatedWordsAsMap.put(wordAndTranslation[0], wordAndTranslation[1]);
-        });
-
         wordsToTranslate.forEach(word -> {
+
             if (translatedWordsAsMap.containsKey(word)) {
                 translations.put(word, translatedWordsAsMap.get(word));
             } else {
                 translations.put(word, getTranslatedWord(word));
-                translatedWordsFromFile.add(word + ";" + translations.get(word));
+                translatedWordsAsMap.put(word, translations.get(word));
             }
+
         });
 
-        fileDataService.saveDataToFile("resources/translatedWords.txt", translatedWordsFromFile, false);
+        fileDataService.saveTranslatedWordsToJsonFile(FILE_WITH_TRANSLATED_WORTDS, translatedWords);
 
         return translations;
 
