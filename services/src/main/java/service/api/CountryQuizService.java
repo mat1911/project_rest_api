@@ -3,6 +3,7 @@ package service.api;
 import exceptions.AppException;
 import model.countriesapi.Country;
 import service.UserDataService;
+import service.api.enums.Answers;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -15,27 +16,37 @@ public class CountryQuizService {
     private Set<Country> correctAnswers;
     private Set<Country> wrongAnswers;
 
-    public CountryQuizService(List<Country> countries) {
+    public CountryQuizService(List<Country> countries, UserDataService userDataService) {
+
+        initFields(countries, userDataService);
+    }
+
+    public Map<Answers, Set<Country>> takeUserAnswers(){
+
+        Map<Answers,  Set<Country>> result = new HashMap<>();
+
+        countries.forEach(this::takeAndCheckAnswer);
+
+        result.put(Answers.CORRECT, correctAnswers);
+        result.put(Answers.WRONG, wrongAnswers);
+
+        return result;
+    }
+
+    private void initFields(List<Country> countries, UserDataService userDataService){
+
+        if(countries.isEmpty()){
+            throw new AppException("CountryQuizService - initFields() - list of countries is empty!");
+        }
+
+        if(countries == null || userDataService == null){
+            throw new AppException("CountryQuizService - initFields() - list of countries or userDataService is null!");
+        }
+
         this.countries = countries;
-        this.userDataService = new UserDataService();
+        this.userDataService = userDataService;
         this.correctAnswers = new HashSet<>();
         this.wrongAnswers = new HashSet<>();
-    }
-
-    public void takeUserAnswers(){
-        System.out.println("Fill missing fields");
-        countries.forEach(this::takeAndCheckAnswer);
-    }
-
-
-    public void showWrongAnswers(){
-
-        showAnswers(wrongAnswers, "==============================WRONG ANSWERS===============================");
-    }
-
-    public void showCorrectAnswers(){
-
-        showAnswers(correctAnswers, "==============================CORRECT ANSWERS=============================");
     }
 
     private void takeAndCheckAnswer(Country country){
@@ -90,9 +101,7 @@ public class CountryQuizService {
             field.setAccessible(true);
             try {
 
-                if(answer.toLowerCase().equals(field.get(country).toString().toLowerCase())){
-                    correctAnswers.add(country);
-                }else {
+                if(!answer.toLowerCase().equals(field.get(country).toString().toLowerCase())){
                     wrongAnswers.add(country);
                 }
 
@@ -100,18 +109,9 @@ public class CountryQuizService {
                 throw new AppException("Problem with checking the answer - CountryQuizService - getAnswers");
             }
         });
-    }
 
-    private void showAnswers(Set<Country> answers, String s) {
-
-        if(answers.isEmpty()){
-            return;
+        if(wrongAnswers.isEmpty()){
+            correctAnswers.add(country);
         }
-
-        System.out.println("==========================================================================");
-        System.out.println(s);
-        System.out.println("==========================================================================");
-        answers.forEach(System.out::println);
-
     }
 }

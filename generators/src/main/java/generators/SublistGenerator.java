@@ -1,21 +1,24 @@
 package generators;
 
+import exceptions.AppException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ElementsGenerator<T> {
 
-    private Random random;
+public class SublistGenerator<T> {
 
-    public ElementsGenerator() {
-        random = new Random();
-    }
+    private Random random = new Random();
 
     public List<T> generateSubList(List<T> inputList, int newSize){
 
         if(inputList.size() <= newSize){
             return inputList;
+        }
+
+        if(inputList == null){
+            throw new AppException("ElementsGenerator - generateSubList() - source list is null");
         }
 
         T drawElement;

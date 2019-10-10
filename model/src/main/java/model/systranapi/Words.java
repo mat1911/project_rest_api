@@ -1,30 +1,15 @@
 package model.systranapi;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Words {
+
     private List<Output> outputs = null;
-
-    public List<Output> getOutputs() {
-        return outputs;
-    }
-
-    public void setOutputs(List<Output> outputs) {
-        this.outputs = outputs;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Words words = (Words) o;
-
-        return outputs != null ? outputs.equals(words.outputs) : words.outputs == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return outputs != null ? outputs.hashCode() : 0;
-    }
 }

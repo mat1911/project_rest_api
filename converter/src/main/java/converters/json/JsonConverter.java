@@ -24,7 +24,7 @@ public abstract class JsonConverter<T>{
         try (FileWriter fileWriter = new FileWriter(jsonFileName)){
             gson.toJson(dataTosafe, fileWriter);
         } catch (Exception e) {
-            throw new AppException("JSON CONVERTER - TO JSON");
+            throw new AppException("JsonConverter - toJsonFile() - problem with saving to file: " + jsonFileName);
         }
     }
 
@@ -33,7 +33,7 @@ public abstract class JsonConverter<T>{
         try (FileReader fileReader = new FileReader(jsonFileName)){
             return Optional.of(gson.fromJson(fileReader, type));
         } catch (Exception e) {
-            throw new AppException("JSON CONVERTER - FROM JSON - FILE MAY BE EMPTY");
+            throw new AppException("JsonConverter - fromJsonFile() - problem with reading from file: " + jsonFileName + ". File may be empty");
         }
     }
 }

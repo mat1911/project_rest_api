@@ -1,6 +1,7 @@
-package service.http;
+package http;
 
 import exceptions.AppException;
+import model.countriesapi.Country;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,7 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.time.Duration;
 
-public class HttpNumbersService<Number> extends AbstractHttpService<Number>{
+public class HttpCountriesService extends AbstractHttpService<Country>{
 
     @Override
     public HttpRequest requestGet(String path) {
@@ -17,14 +18,14 @@ public class HttpNumbersService<Number> extends AbstractHttpService<Number>{
                     .uri(new URI(path))
                     .version(HttpClient.Version.HTTP_2)
                     .timeout(Duration.ofSeconds(10)) // HttpTimeoutException
-                    .header("X-RapidAPI-Host", "numbersapi.p.rapidapi.com")
-                    .header("X-RapidAPI-Key", "<HERE PASTE YOUR KEY FROM RAPIDAPI>")
+                    .header("X-RapidAPI-Host", "restcountries-v1.p.rapidapi.com")
+                    //TODO fill in below field with your key
+                    .header("X-RapidAPI-Key", "<PASTE HERE YOUR API KEY>")
                     .GET()
                     .build();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            throw new AppException("WRONG PATH IN URI");
+            throw new AppException("HttpCountriesService - requestGet() - wrong path in URI: " + path);
         }
     }
-
 }

@@ -1,28 +1,26 @@
 package generators;
 
-public class ApiPathGenerator {
+public interface ApiPathGenerator {
 
-    private static StringBuilder translatorPath;
-
-    public static String getPathToTranslator(String sourceLanguageCode, String targetLanguageCode, String word){
-        translatorPath = new StringBuilder("https://systran-systran-platform-for-language-processing-v1.p.rapidapi.com/translation/text/translate?source=");
+    static String getPathToTranslator(String sourceLanguageCode, String targetLanguageCode, String word){
+        StringBuilder translatorPath = new StringBuilder("https://systran-systran-platform-for-language-processing-v1.p.rapidapi.com/translation/text/translate?source=");
         translatorPath.append(sourceLanguageCode + "&target=");
         translatorPath.append(targetLanguageCode + "&input=" + word);
 
         return translatorPath.toString();
     }
 
-    public static String getPathToCountry(String code){
+    static String getPathToCountry(String code){
 
-        translatorPath = new StringBuilder("https://restcountries-v1.p.rapidapi.com/alpha/");
+        StringBuilder translatorPath = new StringBuilder("https://restcountries-v1.p.rapidapi.com/alpha/");
         translatorPath.append(code);
 
         return translatorPath.toString();
     }
 
-    public static String getPathToNumbers(int month, int day){
+    static String getPathToNumbers(int month, int day){
 
-        translatorPath = new StringBuilder("https://numbersapi.p.rapidapi.com/");
+        StringBuilder translatorPath = new StringBuilder("https://numbersapi.p.rapidapi.com/");
         translatorPath.append(month + "/" + day + "/date?fragment=true&json=true");
 
         return translatorPath.toString();
